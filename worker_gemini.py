@@ -16,6 +16,9 @@ MIN_SECONDS_PER_REQUEST = 8
 MAX_RETRIES_PER_TITLE = 3
 DEFAULT_QUOTA_SLEEP_SECONDS = 60
 
+# Batas maksimal request ke Gemini per API key / worker
+MAX_REQUESTS_PER_API = 250  # <<< BATAS REQUEST PER API KEY
+
 
 # ============================
 # FUNGSI BANTUAN
@@ -206,8 +209,17 @@ def submit_result(job_id, status, judul=None, slug=None, metadesc=None, artikel=
 def main():
     last_call = 0.0
     total_sukses = 0
+    request_count = 0  # <<< COUNTER TOTAL REQUEST KE GEMINI
 
     while True:
+        # Cek batas request sebelum ambil job baru
+        if request_count >= MAX_REQUESTS_PER_API:  # <<<
+            print(
+                f"\n⏹️ Batas {MAX_REQUESTS_PER_API} request untuk API ini tercapai. "
+                f"Worker index {WORKER_INDEX} berhenti."
+            )
+            break
+
         job = get_next_job()
 
         # Benar-benar tidak ada job lagi (server bilang no_job)
@@ -232,7 +244,12 @@ def main():
                 if elapsed < MIN_SECONDS_PER_REQUEST:
                     time.sleep(MIN_SECONDS_PER_REQUEST - elapsed)
 
-                print(f"[JOB {job_id}] 🔄 Gemini request (attempt {attempt})")
+                # Tambah counter request sebelum call ke Gemini
+                request_count += 1  # <<<
+                print(
+                    f"[JOB {job_id}] 🔄 Gemini request (attempt {attempt}) "
+                    f"total_request={request_count}/{MAX_REQUESTS_PER_API}"
+                )
 
                 prompt = build_prompt(judul)
                 res = client.models.generate_content(

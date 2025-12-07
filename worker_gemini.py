@@ -17,7 +17,7 @@ MAX_RETRIES_PER_TITLE = 1
 DEFAULT_QUOTA_SLEEP_SECONDS = 60
 
 # Batas maksimal request ke Gemini per API key / worker
-MAX_REQUESTS_PER_API = 230  # <<< BATAS REQUEST PER API KEY
+MAX_REQUESTS_PER_API = 21  # <<< BATAS REQUEST PER API KEY
 
 
 # ============================
@@ -324,6 +324,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -12,7 +12,7 @@ from google import genai  # SDK baru: google-genai
 # ============================
 JOBS_API_URL = "https://leamarie-yoga.de/jobs_api.php"  # GANTI ke URL jobs_api.php kamu
 
-MIN_SECONDS_PER_REQUEST = 8
+MIN_SECONDS_PER_REQUEST = 30
 MAX_RETRIES_PER_TITLE = 3
 DEFAULT_QUOTA_SLEEP_SECONDS = 60
 
@@ -324,3 +324,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
